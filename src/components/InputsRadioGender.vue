@@ -5,18 +5,22 @@
       class="form-gender__input"
       v-model="picked"
       value="Мужской"
-      id="man"
+      id="mangender"
     />
-    <label class="form-gender__label" for="man"> Мужской </label>
+    <label class="form-gender__label" for="mangender" tabindex="0">
+      Мужской
+    </label>
 
     <input
       type="radio"
       class="form-gender__input"
       v-model="picked"
       value="Женский"
-      id="woman"
+      id="womangender"
     />
-    <label class="form-gender__label" for="woman"> Женский </label>
+    <label class="form-gender__label" for="womangender" tabindex="0">
+      Женский
+    </label>
   </div>
 </template>
 
