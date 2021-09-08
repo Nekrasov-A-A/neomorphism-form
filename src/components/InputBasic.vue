@@ -9,7 +9,7 @@
       :type="inputType"
       :value="value"
       @change="$emit('input', $event.target.value)"
-      @keypress="validateInput($event)"
+      @keydown="customValidateInput($event)"
     />
 
     <label
@@ -61,7 +61,7 @@ export default {
     errorMessages,
   }),
   methods: {
-    validateInput: function(event) {
+    customValidateInput: function(event) {
       if (
         event.charCode === 9 ||
         event.charCode === 13 ||
