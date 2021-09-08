@@ -53,6 +53,7 @@ export default {
   justify-content: center
   cursor: default
   font-size: 14px
+  color: $color-dark-blue
   &__label
     box-shadow: -5px -5px 20px $color-white,  5px 5px 20px $color-shadow
     width: 32px

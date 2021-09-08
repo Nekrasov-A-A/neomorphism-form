@@ -9,7 +9,14 @@
       @blur="field.$touch()"
       @focus="field.$reset()"
       class="form-group__select"
-      :class="{ 'form-group__select--error': field.$error }"
+      :class="{
+        'form-group__select--error': field.$error,
+        'form-group__select--success':
+          !field.$error &&
+          field.$dirty &&
+          field.$model !== 'Не выбрано' &&
+          field.$model !== '',
+      }"
     >
       <option value="" disabled>{{ disabledPhrase }}</option>
       <option v-for="(item, index) of optionsData" :key="index" :value="item">
@@ -83,6 +90,8 @@ export default {
             border: 2px solid $color-dark-blue
       &--error
         border-color: $color-red
+      &--success
+        border-color: $color-success
       > option
         color: $color-dark-blue
         background-color: $color-bg

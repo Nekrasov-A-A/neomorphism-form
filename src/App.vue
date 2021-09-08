@@ -3,7 +3,7 @@
     <div class="wrapper">
       <PopUp v-if="isShowPopUp" @closePopUp="closePopUp" />
       <form class="form" @submit.prevent="onSubmit" novalidate>
-        <!--  -->
+        <!-- BASIC START -->
         <InputBasic
           v-model.trim="$v.form.lastName.$model"
           placeholder="Фамилия"
@@ -32,30 +32,65 @@
           :customInputRules="acceptOnlyNumbers"
         />
 
+        <InputsRadioGender
+          v-model.trim="$v.form.gender.$model"
+          :field="$v.form.gender"
+        />
+        <!-- МУЛЬТИСЕЛЕКТОР ЗДЕСЬ -->
         <InputSelect
           :optionsData="doctorsData"
           v-model="$v.form.doctor.$model"
           :field="$v.form.doctor"
           disabledPhrase="Выберите врача"
         />
-        <!--  -->
+
         <InputCheckBox
           v-model="$v.form.isNotify.$model"
           :field="$v.form.isNotify"
         />
+        <!-- BASIC END -->
+        <!-- ADDRESS START -->
+        <InputBasic
+          v-model.trim="$v.form.address.postcode.$model"
+          placeholder="Индекс"
+          :field="$v.form.address.postcode"
+          :customInputRules="acceptOnlyNumbers"
+        />
+        <InputBasic
+          v-model.trim="$v.form.address.country.$model"
+          placeholder="Страна"
+          :field="$v.form.address.country"
+          :customInputRules="acceptOnlyLetters"
+        />
+        <InputBasic
+          v-model.trim="$v.form.address.region.$model"
+          placeholder="Регион"
+          :field="$v.form.address.region"
+          :customInputRules="acceptOnlyLetters"
+        />
+        <InputBasic
+          v-model.trim="$v.form.address.city.$model"
+          placeholder="Город"
+          :field="$v.form.address.city"
+          :customInputRules="acceptOnlyLetters"
+        />
+        <InputBasic
+          v-model.trim="$v.form.address.houseNumber.$model"
+          placeholder="Номер дома"
+          :field="$v.form.address.houseNumber"
+          :customInputRules="acceptOnlyNumbers"
+        />
+        <!-- ADDRESS END -->
 
         <!-- PASSPORT START -->
-
         <InputSelect
           :optionsData="typeOfDocumentsData"
           v-model="$v.form.passport.documentType.$model"
           :field="$v.form.passport.documentType"
           disabledPhrase="Выберите тип документа*"
         />
-
         <!-- PASSPORT END -->
         <ButtonSubmit>Отправить</ButtonSubmit>
-        <!--  -->
       </form>
     </div>
   </div>
@@ -67,6 +102,7 @@ import InputBasic from "./components/InputBasic.vue";
 import InputCheckBox from "./components/InputCheckbox.vue";
 import InputSelect from "./components/InputSelect.vue";
 import ButtonSubmit from "./components/ButtonSubmit.vue";
+import InputsRadioGender from "./components/InputsRadioGender.vue";
 import PopUp from "./components/PopUp.vue";
 import {
   alphaRuEn,
@@ -75,7 +111,14 @@ import {
 } from "./utils/validateRules";
 export default {
   name: "App",
-  components: { InputBasic, InputCheckBox, InputSelect, ButtonSubmit, PopUp },
+  components: {
+    InputBasic,
+    InputCheckBox,
+    InputSelect,
+    ButtonSubmit,
+    PopUp,
+    InputsRadioGender,
+  },
   data: () => ({
     doctorsData: ["Иванов", "Захаров", "Чернышева"],
     typeOfDocumentsData: [
@@ -89,8 +132,17 @@ export default {
       firstName: "",
       patronymicName: "",
       mobilePhoneNumber: "",
+      gender: "",
       isNotify: false,
       doctor: "Не выбрано",
+      address: {
+        postcode: "",
+        country: "",
+        region: "",
+        city: "",
+        street: "",
+        houseNumber: "",
+      },
       passport: {
         documentType: "",
       },
@@ -111,6 +163,7 @@ export default {
       return value;
     },
     onSubmit: function() {
+      console.log(this.$v.form.$model.gender);
       this.$v.$touch();
       if (!this.$v.$anyError) {
         this.isShowPopUp = true;
@@ -142,8 +195,17 @@ export default {
         MobilePhoneNumberLength,
         firstValueMobilePhoneNumber,
       },
+      gender: {},
       isNotify: {},
       doctor: {},
+      address: {
+        postcode: {},
+        country: { alphaRuEn },
+        region: { alphaRuEn },
+        city: { required },
+        street: {},
+        houseNumber: {},
+      },
       passport: {
         documentType: { required },
       },
@@ -156,6 +218,7 @@ export default {
 
 .wrapper
   min-height: 100vh
+  padding: 50px 0
   display: flex
   align-items: center
   justify-content: center
