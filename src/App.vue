@@ -54,7 +54,6 @@
           v-model.trim="$v.form.address.postcode.$model"
           placeholder="Индекс"
           :field="$v.form.address.postcode"
-          :customInputRules="acceptOnlyNumbers"
         />
         <InputBasic
           v-model.trim="$v.form.address.country.$model"
@@ -108,6 +107,7 @@ import {
   alphaRuEn,
   firstValueMobilePhoneNumber,
   MobilePhoneNumberLength,
+  onlynumerical,
 } from "./utils/validateRules";
 export default {
   name: "App",
@@ -202,9 +202,9 @@ export default {
         postcode: {},
         country: { alphaRuEn },
         region: { alphaRuEn },
-        city: { required },
-        street: {},
-        houseNumber: {},
+        city: { required, alphaRuEn },
+        street: { alphaRuEn },
+        houseNumber: { onlynumerical },
       },
       passport: {
         documentType: { required },
