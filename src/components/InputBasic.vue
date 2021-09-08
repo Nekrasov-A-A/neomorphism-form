@@ -9,7 +9,7 @@
       :type="inputType"
       :value="value"
       @change="$emit('input', $event.target.value)"
-      @keydown="customValidateInput($event)"
+      @keypress="customValidateInput($event)"
     />
 
     <label
