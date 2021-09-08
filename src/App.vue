@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <div class="wrapper">
-      <div>{{ "TEST" + form.mobilePhoneNumber }}</div>
       <form class="form" @submit.prevent="onSubmit" novalidate>
         <!--  -->
         <InputBasic
@@ -29,6 +28,7 @@
           v-model.trim="$v.form.mobilePhoneNumber.$model"
           placeholder="Мобильный телефон"
           :field="$v.form.mobilePhoneNumber"
+          :customInputRules="acceptOnlyNumbers"
         />
         <!--  -->
         <InputCheckBox
@@ -65,8 +65,11 @@ export default {
     },
   }),
   methods: {
-    acceptOnlyLetters: function(prop) {
-      return /[а-яa-z]/gi.test(prop);
+    acceptOnlyLetters: function(key) {
+      return /[а-яa-z]/gi.test(key);
+    },
+    acceptOnlyNumbers: function(key) {
+      return /[0-9]/gi.test(key);
     },
     toUpperCaseFirstLetter: function(value) {
       if (value !== "") return value.slice(0, 1).toUpperCase() + value.slice(1);
