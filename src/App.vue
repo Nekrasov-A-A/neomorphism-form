@@ -76,21 +76,22 @@ export default {
       return value;
     },
     onSubmit: function() {
-      // if valid
-      const formData = {
-        lastName: this.toUpperCaseFirstLetter(this.$v.form.$model.lastName),
-        firstName: this.toUpperCaseFirstLetter(this.$v.form.$model.firstName),
-        patronymicName: this.toUpperCaseFirstLetter(
-          this.$v.form.$model.patronymicName
-        ),
-        mobilePhoneNumber: this.$v.form.$model.mobilePhoneNumber
-          .match(/[0-9]/g)
-          .join(""),
-        isNotify: this.$v.form.$model.isNotify,
-      };
       this.$v.$touch();
-      console.log(formData);
-      // console.log(this.$v.form.$model)
+      if (!this.$v.$anyError) {
+        const formData = {
+          lastName: this.toUpperCaseFirstLetter(this.$v.form.$model.lastName),
+          firstName: this.toUpperCaseFirstLetter(this.$v.form.$model.firstName),
+          patronymicName: this.toUpperCaseFirstLetter(
+            this.$v.form.$model.patronymicName
+          ),
+          mobilePhoneNumber: this.$v.form.$model.mobilePhoneNumber
+            .match(/[0-9]/g)
+            .join(""),
+          isNotify: this.$v.form.$model.isNotify,
+        };
+        console.log(formData);
+      }
+      return;
     },
   },
   components: { InputBasic, InputCheckBox },

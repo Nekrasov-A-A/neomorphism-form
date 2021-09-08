@@ -9,7 +9,7 @@
       :type="inputType"
       :value="value"
       @change="$emit('input', $event.target.value)"
-      @keypress="testFn($event)"
+      @keypress="validateInput($event)"
     />
 
     <label
@@ -18,8 +18,9 @@
         'form-group__label--success':
           value !== '' && !field.$invalid && field.$dirty,
       }"
-      >{{ placeholder }}</label
-    >
+      >{{ placeholder }}
+      <img src="@/assets/check-circle-solid.svg" alt="check icon" />
+    </label>
     <!-- Error-message start -->
     <div
       v-for="(item, index) of Object.keys(field.$params)"
@@ -60,7 +61,7 @@ export default {
     errorMessages,
   }),
   methods: {
-    testFn: function(event) {
+    validateInput: function(event) {
       if (
         event.charCode === 9 ||
         event.charCode === 13 ||
@@ -74,11 +75,9 @@ export default {
       ) {
         return;
       }
-      /// custom rules here i think
       if (this.customInputRules(event.key)) {
         return;
       }
-      ///
       event.preventDefault();
     },
     isRequired: function() {
@@ -109,10 +108,17 @@ export default {
     cursor: text
     display: none
     font-size: 14px
+    > img
+      width: 14px
+      height: 14px
+      display: none
     &--success
         color: $color-success
         top: -10px
         display: flex
+        > img
+          display: flex
+          margin-left: 4px
 
   &__input
       border: 1px solid transparent
