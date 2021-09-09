@@ -24,7 +24,13 @@
           :field="$v.form.patronymicName"
           :customInputRules="acceptOnlyLetters"
         />
-        <section class="form__date">
+        <section
+          class="form__date "
+          :class="{
+            'form__date--error': $v.form.dayOfBirth.$anyError,
+            'form__date--success': !$v.form.dayOfBirth.$invalid,
+          }"
+        >
           <div
             v-if="$v.form.dayOfBirth.$anyError && !isShowErrorMessages"
             class="form__date__message-error"
@@ -128,7 +134,15 @@
           :field="$v.form.passport.documentType"
           disabledPhrase="Выберите тип документа*"
         />
-        <section class="form__date form__date__passport-date">
+        <section
+          class="form__date  form__date__passport-date"
+          :class="{
+            'form__date--error': $v.form.passport.documentInfo.$anyError,
+            'form__date--success':
+              !$v.form.passport.documentInfo.$anyError &&
+              $v.form.passport.documentInfo.$dirty,
+          }"
+        >
           <div
             v-if="
               $v.form.passport.documentInfo.$anyError && !isShowErrorMessages
@@ -164,7 +178,13 @@
           v-model.trim="$v.form.passport.issuedBy.$model"
           :field="$v.form.passport.issuedBy"
         />
-        <section class="form__date">
+        <section
+          class="form__date "
+          :class="{
+            'form__date--error': $v.form.passport.dateOfIssue.$anyError,
+            'form__date--success': !$v.form.passport.dateOfIssue.$invalid,
+          }"
+        >
           <div
             v-if="
               $v.form.passport.dateOfIssue.$anyError && !isShowErrorMessages
@@ -425,6 +445,11 @@ export default {
       box-shadow:  inset 2px 2px 5px $color-shadow, inset -5px -5px 10px transparentize($color-white,.3)
       padding: 16px
       border-radius: 10px
+      border: 2px solid transparent
+      &--error
+        border-color: $color-red
+      &--success
+        border-color: $color-success
       &__flex-box
         display: flex
         > *
