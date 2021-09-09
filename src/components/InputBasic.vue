@@ -2,7 +2,10 @@
   <div class="form-group">
     <input
       class="form-group__input"
-      :class="{ 'form-group__input--error': field.$error }"
+      :class="{
+        'form-group__input--error': field.$error,
+        'form-group__input--inner-bs': !isShowErrorMessages,
+      }"
       @blur="field.$touch()"
       @focus="field.$reset()"
       :placeholder="isRequired()"
@@ -185,9 +188,10 @@ export default {
       &::placeholder
         color: $color-grayish-blue
         font-size: 14px
+      &--inner-bs
+        box-shadow:  inset 1px 1px 2px $color-shadow, inset -1px -1px 2px $color-white
       &--error
         border-color: $color-red
-        box-shadow:  inset 2px 2px 5px $color-shadow, inset -5px -5px 10px transparentize($color-white,.3), inset 0 0 2px transparentize($color-red,.5), 0 0 2px  transparentize($color-red,.5)
         &::placeholder
           color: $color-red
 </style>
