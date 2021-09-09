@@ -1,21 +1,21 @@
 <template>
   <div class="input-checkbox">
-    Получать уведомления
+    <h1>{{ label }}</h1>
     <input
       class="input-checkbox__input"
       type="checkbox"
-      @change="$emit('input', checked)"
+      :id="item"
+      :value="item"
       v-model="checked"
-      id="toggle"
+      @change="$emit('input', localValue)"
+      :ref="item"
     />
     <label
       class="input-checkbox__label"
       tabindex="0"
-      for="toggle"
-      @keypress.enter="checked = checked ? false : true"
-      @keypress.space="checked = checked ? false : true"
-      @click="fixFocusBug"
-      ref="fixFocusBug"
+      :for="item"
+      @click="fixFocusBug($event)"
+      @keypress.enter="imitateInputChange(item)"
     >
       <img src="@/assets/check-solid.svg" alt="check icon" />
     </label>
@@ -25,21 +25,43 @@
 <script>
 export default {
   name: "InputCheckBox",
-  data: () => ({
-    checked: false,
-  }),
-  methods: {
-    fixFocusBug: function() {
-      this.$refs.fixFocusBug.blur();
-    },
-  },
   props: {
     value: {
-      type: Boolean,
+      type: [Boolean, Array],
     },
-
     field: {
       type: Object,
+    },
+    item: {
+      type: [String, Array],
+    },
+    label: {
+      type: String,
+    },
+  },
+
+  data: () => ({
+    localValue: false,
+  }),
+
+  methods: {
+    fixFocusBug: function(event) {
+      event.target.parentNode.blur();
+      event.target.blur();
+    },
+    imitateInputChange: function(value) {
+      this.$refs[value].click();
+    },
+  },
+
+  computed: {
+    checked: {
+      get() {
+        return this.value;
+      },
+      set(val) {
+        this.localValue = val;
+      },
     },
   },
 };
@@ -47,7 +69,6 @@ export default {
 
 <style lang="sass" scoped>
 .input-checkbox
-  margin-bottom: 20px
   display: flex
   align-items: center
   justify-content: center
@@ -63,10 +84,11 @@ export default {
     justify-content: center
     cursor: pointer
     border-radius: 8px
-    margin-left: 20px
+    margin-left: 10px
     transition: all .3s
     background: transparentize($color-white,.2)
     border: 1px solid transparentize($color-white,.3)
+    user-select: none
     &:hover
       box-shadow: -2px -2px 5px transparentize($color-white,.3), 2px 2px 5px $color-shadow
       border-color: transparent

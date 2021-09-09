@@ -53,7 +53,6 @@ export default {
 
 <style lang="sass" scoped>
 .form-group
-  margin-bottom: 20px
   padding-bottom: 20px
   position: relative
   display: flex

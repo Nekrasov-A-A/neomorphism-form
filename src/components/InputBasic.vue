@@ -26,11 +26,25 @@
       v-for="(item, index) of Object.keys(field.$params)"
       :key="index"
       class="form-group__error-message"
-      v-show="!field[item] && field.$dirty"
+      v-show="!field[item] && field.$dirty && isShowErrorMessages"
     >
-      {{ errorMessages[item] }}
+      {{
+        item === "maxLength" || "minLength"
+          ? field.maxLength === false
+            ? errorMessages[item] + field.$params.maxLength.max
+            : field.minLength === false
+            ? errorMessages[item] + field.$params.minLength.min
+            : errorMessages[item]
+          : errorMessages[item]
+      }}
     </div>
     <!-- Error-message end- -->
+    <div
+      class="form-group__tip"
+      v-if="!field.$anyError && tip && field.$invalid"
+    >
+      {{ tip }}
+    </div>
   </div>
 </template>
 
@@ -56,10 +70,19 @@ export default {
     customInputRules: {
       type: Function,
     },
+    isShowErrorMessages: {
+      type: Boolean,
+      default: true,
+    },
+    tip: {
+      type: [String, Boolean],
+      default: false,
+    },
   },
   data: () => ({
     errorMessages,
   }),
+
   methods: {
     customValidateInput: function(event) {
       if (
@@ -99,6 +122,12 @@ export default {
     left: 16px
     font-size: 12px
     color: $color-red
+  &__tip
+    position: absolute
+    bottom: 4px
+    left: 16px
+    font-size: 12px
+    color: $color-grayish-blue
   &__label
     position: absolute
     top: 50%
@@ -108,6 +137,8 @@ export default {
     cursor: text
     display: none
     font-size: 14px
+    @media screen and (max-width: $mobile)
+      left: 12px
     > img
       width: 14px
       height: 14px
@@ -126,7 +157,7 @@ export default {
       font-size: 16px
       border-radius: 50px
       outline: 0
-      background-color:$color-bg
+      background-color: $color-bg
       text-shadow: 1px 1px 0 $color-white
       box-shadow:  inset 2px 2px 5px $color-shadow, inset -5px -5px 10px transparentize($color-white,.3)
       width: 100%
@@ -135,6 +166,8 @@ export default {
       appearance: none
       -webkit-appearance: none
       color: $color-dark-blue
+      @media screen and (max-width: $mobile)
+        padding: 12px
       &:focus
         box-shadow:  inset 1px 1px 2px $color-shadow, inset -1px -1px 2px $color-white
       &:focus::placeholder
