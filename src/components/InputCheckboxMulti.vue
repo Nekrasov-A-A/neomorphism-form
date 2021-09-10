@@ -4,7 +4,12 @@
     :class="{ 'multiple-checkbox--error': field.$anyError }"
   >
     <h3>Группа клиентов*</h3>
-    <InputCheckbox item="VIP" label="VIP" v-model="checkedGroup" />
+    <InputCheckbox
+      item="VIP"
+      label="VIP"
+      v-model="checkedGroup"
+      ref="checkbox"
+    />
     <InputCheckbox
       item="Проблемные"
       label="Проблемные"
@@ -45,6 +50,9 @@ export default {
   }),
 
   methods: {
+    focus: function() {
+      this.$refs.checkbox.focus();
+    },
     fixFocusBug: function(event) {
       event.target.parentNode.blur();
     },

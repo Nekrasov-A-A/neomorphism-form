@@ -1,6 +1,6 @@
 <template>
   <div class="form-gender">
-    <h3 class="form-gender__headline">Выберите пол:</h3>
+    <h3 class="form-gender__headline">Укажите пол:</h3>
     <div class="form-gender__flex-box">
       <input
         type="radio"

@@ -16,6 +16,7 @@
       :for="item"
       @click="fixFocusBug($event)"
       @keypress.enter="imitateInputChange(item)"
+      ref="label"
     >
       <img src="@/assets/check-solid.svg" alt="check icon" />
     </label>
@@ -51,6 +52,9 @@ export default {
     },
     imitateInputChange: function(value) {
       this.$refs[value].click();
+    },
+    focus: function() {
+      this.$refs.label.focus();
     },
   },
 

@@ -1,14 +1,15 @@
 <template>
   <div id="app">
     <div class="wrapper">
-      <PopUp v-if="isShowPopUp" @closePopUp="closePopUp" />
+      <PopUp v-if="isShowPopUp" @closePopUp="closePopUp" :formData="formData" />
       <form class="form" @submit.prevent="onSubmit" novalidate>
-        <!-- SIMPLE START -->
+        <!--  -->
         <InputBasic
           v-model.trim="$v.form.lastName.$model"
           placeholder="Фамилия"
           :field="$v.form.lastName"
           :customInputRules="acceptOnlyLetters"
+          ref="lastName"
         />
 
         <InputBasic
@@ -16,6 +17,7 @@
           placeholder="Имя"
           :field="$v.form.firstName"
           :customInputRules="acceptOnlyLetters"
+          ref="firstName"
         />
 
         <InputBasic
@@ -23,13 +25,17 @@
           placeholder="Отчество"
           :field="$v.form.patronymicName"
           :customInputRules="acceptOnlyLetters"
+          ref="patronymicName"
         />
+
         <section
-          class="form__date "
+          class="form__date"
           :class="{
             'form__date--error': $v.form.dayOfBirth.$anyError,
             'form__date--success': !$v.form.dayOfBirth.$invalid,
           }"
+          ref="dayOfBirth"
+          tabindex="0"
         >
           <div
             v-if="$v.form.dayOfBirth.$anyError && !isShowErrorMessages"
@@ -40,37 +46,42 @@
           <h3 class="form__date__headline">Дата рождения*</h3>
           <div class="form__date__flex-box">
             <InputBasic
-              v-model.trim="$v.form.dayOfBirth.day.$model"
+              v-model.trim="$v.form.dayOfBirth.dayOfBirthDay.$model"
               placeholder="День"
-              :field="$v.form.dayOfBirth.day"
+              :field="$v.form.dayOfBirth.dayOfBirthDay"
               :customInputRules="acceptOnlyNumbers"
               :isShowErrorMessages="isShowErrorMessages"
               tip="дд"
+              ref="dayOfBirthDay"
             />
             <InputBasic
-              v-model.trim="$v.form.dayOfBirth.month.$model"
+              v-model.trim="$v.form.dayOfBirth.dayOfBirthMonth.$model"
               placeholder="Месяц"
-              :field="$v.form.dayOfBirth.month"
+              :field="$v.form.dayOfBirth.dayOfBirthMonth"
               :customInputRules="acceptOnlyNumbers"
               :isShowErrorMessages="isShowErrorMessages"
               tip="мм"
+              ref="dayOfBirthMonth"
             />
             <InputBasic
-              v-model.trim="$v.form.dayOfBirth.year.$model"
+              v-model.trim="$v.form.dayOfBirth.dayOfBirthYear.$model"
               placeholder="Год"
-              :field="$v.form.dayOfBirth.year"
+              :field="$v.form.dayOfBirth.dayOfBirthYear"
               :customInputRules="acceptOnlyNumbers"
               :isShowErrorMessages="isShowErrorMessages"
               tip="гггг"
+              ref="dayOfBirthYear"
             />
           </div>
         </section>
+
         <InputBasic
           v-model.trim="$v.form.mobilePhoneNumber.$model"
           placeholder="Мобильный телефон"
           :field="$v.form.mobilePhoneNumber"
           :customInputRules="acceptOnlyNumbers"
           tip="Начинается с 7"
+          ref="mobilePhoneNumber"
         />
 
         <InputsRadioGender
@@ -80,6 +91,7 @@
         <InputCheckboxMulti
           v-model="$v.form.multiple.$model"
           :field="$v.form.multiple"
+          ref="multiple"
         />
         <InputSelect
           :optionsData="doctorsData"
@@ -93,60 +105,72 @@
           item="СМС"
           label="Получать СМС-уведомления"
         />
-        <!-- SIMPLE END -->
-        <!-- ADDRESS START -->
         <InputBasic
-          v-model.trim="$v.form.address.postcode.$model"
+          v-model.trim="$v.form.postcode.$model"
           placeholder="Индекс"
-          :field="$v.form.address.postcode"
+          :field="$v.form.postcode"
           :customInputRules="() => true"
+          ref="postcode"
         />
         <InputBasic
-          v-model.trim="$v.form.address.country.$model"
+          v-model.trim="$v.form.country.$model"
           placeholder="Страна"
-          :field="$v.form.address.country"
+          :field="$v.form.country"
           :customInputRules="acceptOnlyLetters"
+          ref="country"
         />
         <InputBasic
-          v-model.trim="$v.form.address.region.$model"
+          v-model.trim="$v.form.region.$model"
           placeholder="Регион"
-          :field="$v.form.address.region"
+          :field="$v.form.region"
           :customInputRules="acceptOnlyLetters"
+          ref="region"
         />
         <InputBasic
-          v-model.trim="$v.form.address.city.$model"
+          v-model.trim="$v.form.city.$model"
           placeholder="Город"
-          :field="$v.form.address.city"
+          :field="$v.form.city"
           :customInputRules="acceptOnlyLetters"
+          ref="city"
         />
         <InputBasic
-          v-model.trim="$v.form.address.houseNumber.$model"
-          placeholder="Номер дома"
-          :field="$v.form.address.houseNumber"
-          :customInputRules="acceptOnlyNumbers"
+          v-model.trim="$v.form.street.$model"
+          placeholder="Улица"
+          :field="$v.form.street"
+          :customInputRules="acceptOnlyLetters"
+          ref="street"
         />
-        <!-- ADDRESS END -->
+        <InputBasic
+          v-model.trim="$v.form.houseNumber.$model"
+          placeholder="Номер дома"
+          :field="$v.form.houseNumber"
+          :customInputRules="acceptOnlyNumbers"
+          ref="houseNumber"
+        />
 
-        <!-- PASSPORT START -->
         <InputSelect
           :optionsData="typeOfDocumentsData"
-          v-model="$v.form.passport.documentType.$model"
-          :field="$v.form.passport.documentType"
+          v-model="$v.form.documentType.$model"
+          :field="$v.form.documentType"
           disabledPhrase="Выберите тип документа*"
+          ref="documentType"
         />
+
         <section
           class="form__date  form__date__passport-date"
           :class="{
-            'form__date--error': $v.form.passport.documentInfo.$anyError,
+            'form__date--error': $v.form.documentInfo.$anyError,
             'form__date--success':
-              !$v.form.passport.documentInfo.$anyError &&
-              $v.form.passport.documentInfo.$dirty,
+              !$v.form.documentInfo.$anyError &&
+              $v.form.documentInfo.$dirty &&
+              $v.form.documentInfo.seriesOfPassport.$model !== '' &&
+              $v.form.documentInfo.numberOfPassport.$model !== '',
           }"
+          ref="documentInfo"
+          tabindex="0"
         >
           <div
-            v-if="
-              $v.form.passport.documentInfo.$anyError && !isShowErrorMessages
-            "
+            v-if="$v.form.documentInfo.$anyError && !isShowErrorMessages"
             class="form__date__message-error"
           >
             Значение неприемлимо
@@ -154,41 +178,40 @@
           <h3 class="form__date__headline">Данные документа:</h3>
           <div class="form__date__flex-box">
             <InputBasic
-              v-model.trim="
-                $v.form.passport.documentInfo.seriesOfPassport.$model
-              "
+              v-model.trim="$v.form.documentInfo.seriesOfPassport.$model"
               placeholder="Серия"
-              :field="$v.form.passport.documentInfo.seriesOfPassport"
+              :field="$v.form.documentInfo.seriesOfPassport"
               :customInputRules="acceptOnlyNumbers"
               :isShowErrorMessages="isShowErrorMessages"
+              ref="seriesOfPassport"
             />
             <InputBasic
-              v-model.trim="
-                $v.form.passport.documentInfo.numberOfPassport.$model
-              "
+              v-model.trim="$v.form.documentInfo.numberOfPassport.$model"
               placeholder="Номер"
-              :field="$v.form.passport.documentInfo.numberOfPassport"
+              :field="$v.form.documentInfo.numberOfPassport"
               :customInputRules="acceptOnlyNumbers"
               :isShowErrorMessages="isShowErrorMessages"
+              ref="numberOfPassport"
             />
           </div>
         </section>
 
         <TextareaBasic
-          v-model.trim="$v.form.passport.issuedBy.$model"
-          :field="$v.form.passport.issuedBy"
+          v-model="$v.form.issuedBy.$model"
+          :field="$v.form.issuedBy"
         />
+
         <section
           class="form__date "
           :class="{
-            'form__date--error': $v.form.passport.dateOfIssue.$anyError,
-            'form__date--success': !$v.form.passport.dateOfIssue.$invalid,
+            'form__date--error': $v.form.dateOfIssue.$anyError,
+            'form__date--success': !$v.form.dateOfIssue.$invalid,
           }"
+          tabindex="0"
+          ref="dateOfIssue"
         >
           <div
-            v-if="
-              $v.form.passport.dateOfIssue.$anyError && !isShowErrorMessages
-            "
+            v-if="$v.form.dateOfIssue.$anyError && !isShowErrorMessages"
             class="form__date__message-error"
           >
             Поля обязательны к заполнению
@@ -196,32 +219,35 @@
           <h3 class="form__date__headline">Дата выдачи*</h3>
           <div class="form__date__flex-box">
             <InputBasic
-              v-model.trim="$v.form.passport.dateOfIssue.day.$model"
+              v-model.trim="$v.form.dateOfIssue.dateOfIssueDay.$model"
               placeholder="День"
-              :field="$v.form.passport.dateOfIssue.day"
+              :field="$v.form.dateOfIssue.dateOfIssueDay"
               :customInputRules="acceptOnlyNumbers"
               :isShowErrorMessages="isShowErrorMessages"
               tip="дд"
+              ref="dateOfIssueDay"
             />
             <InputBasic
-              v-model.trim="$v.form.passport.dateOfIssue.month.$model"
+              v-model.trim="$v.form.dateOfIssue.dateOfIssueMonth.$model"
               placeholder="Месяц"
-              :field="$v.form.passport.dateOfIssue.month"
+              :field="$v.form.dateOfIssue.dateOfIssueMonth"
               :customInputRules="acceptOnlyNumbers"
               :isShowErrorMessages="isShowErrorMessages"
               tip="мм"
+              ref="dateOfIssueMonth"
             />
             <InputBasic
-              v-model.trim="$v.form.passport.dateOfIssue.year.$model"
+              v-model.trim="$v.form.dateOfIssue.dateOfIssueYear.$model"
               placeholder="Год"
-              :field="$v.form.passport.dateOfIssue.year"
+              :field="$v.form.dateOfIssue.dateOfIssueYear"
               :customInputRules="acceptOnlyNumbers"
               :isShowErrorMessages="isShowErrorMessages"
               tip="гггг"
+              ref="dateOfIssueYear"
             />
           </div>
         </section>
-        <!-- PASSPORT END -->
+
         <ButtonSubmit>Отправить</ButtonSubmit>
       </form>
     </div>
@@ -268,41 +294,39 @@ export default {
       "Вод. удостоверение",
     ],
     isShowErrorMessages: false,
-    isShowPopUp: false,
+    isShowPopUp: true,
+    formData: "",
     form: {
       lastName: "",
       firstName: "",
       patronymicName: "",
       multiple: [],
       dayOfBirth: {
-        day: "",
-        month: "",
-        year: "",
+        dayOfBirthDay: "",
+        dayOfBirthMonth: "",
+        dayOfBirthYear: "",
       },
       mobilePhoneNumber: "",
       gender: "",
       isNotify: false,
       doctor: "Не выбрано",
-      address: {
-        postcode: "",
-        country: "",
-        region: "",
-        city: "",
-        street: "",
-        houseNumber: "",
+
+      postcode: "",
+      country: "",
+      region: "",
+      city: "",
+      street: "",
+      houseNumber: "",
+      documentType: "",
+      documentInfo: {
+        seriesOfPassport: "",
+        numberOfPassport: "",
       },
-      passport: {
-        documentType: "",
-        documentInfo: {
-          seriesOfPassport: "",
-          numberOfPassport: "",
-        },
-        issuedBy: "",
-        dateOfIssue: {
-          day: "",
-          month: "",
-          year: "",
-        },
+      issuedBy: "",
+      dateOfIssue: {
+        dateOfIssueDay: "",
+        dateOfIssueMonth: "",
+        dateOfIssueYear: "",
       },
     },
   }),
@@ -322,23 +346,57 @@ export default {
       return value;
     },
     onSubmit: function() {
-      console.log(this.$v.form.passport.issuedBy.$model);
       this.$v.$touch();
-      if (!this.$v.$anyError) {
+      if (this.$v.$invalid) {
+        let invalidFields = Object.keys(this.$v.form).filter(
+          (fieldName) => this.$v.form[fieldName].$invalid
+        );
+        if (invalidFields) {
+          this.$refs[invalidFields[0]].focus();
+        }
+      } else {
         this.isShowPopUp = true;
-        const formData = {
+
+        // multiple: [],
+
+        this.formData = {
           lastName: this.toUpperCaseFirstLetter(this.$v.form.$model.lastName),
           firstName: this.toUpperCaseFirstLetter(this.$v.form.$model.firstName),
           patronymicName: this.toUpperCaseFirstLetter(
             this.$v.form.$model.patronymicName
           ),
+          targetGroup: this.$v.form.multiple.$model,
           mobilePhoneNumber: this.$v.form.$model.mobilePhoneNumber
             .match(/[0-9]/g)
             .join(""),
+          dayOfBirth:
+            this.$v.form.$model.dayOfBirth.dayOfBirthDay +
+            "." +
+            this.$v.form.$model.dayOfBirth.dayOfBirthMonth +
+            "." +
+            this.$v.form.$model.dayOfBirth.dayOfBirthYear,
+          gender: this.$v.form.$model.gender,
           isNotify: this.$v.form.$model.isNotify,
           doctor: this.$v.form.$model.doctor,
+          postcode: this.$v.form.$model.postcode,
+          country: this.$v.form.$model.country,
+          region: this.$v.form.$model.region,
+          city: this.$v.form.$model.city,
+          street: this.$v.form.$model.street,
+          houseNumber: this.$v.form.$model.houseNumber,
+          documentType: this.$v.form.$model.documentType,
+          documentInfo:
+            this.$v.form.$model.documentInfo.seriesOfPassport +
+            "/" +
+            this.$v.form.$model.documentInfo.numberOfPassport,
+          issuedBy: this.$v.form.$model.issuedBy,
+          dateOfIssue:
+            this.$v.form.$model.dateOfIssue.dateOfIssueDay +
+            "." +
+            this.$v.form.$model.dateOfIssue.dateOfIssueMonth +
+            "." +
+            this.$v.form.$model.dateOfIssue.dateOfIssueYear,
         };
-        console.log(formData);
       }
       return;
     },
@@ -356,17 +414,17 @@ export default {
         firstValueMobilePhoneNumber,
       },
       dayOfBirth: {
-        day: {
+        dayOfBirthDay: {
           required,
           maxValue: maxValue(31),
           minValue: minValue(0),
         },
-        month: {
+        dayOfBirthMonth: {
           required,
           maxValue: maxValue(12),
           minValue: minValue(1),
         },
-        year: {
+        dayOfBirthYear: {
           required,
           maxValue: maxValue(2021),
           minValue: minValue(1800),
@@ -375,46 +433,42 @@ export default {
       gender: {},
       isNotify: {},
       doctor: {},
-      address: {
-        postcode: {},
-        country: { alphaRuEn },
-        region: { alphaRuEn },
-        city: { required, alphaRuEn },
-        street: { alphaRuEn },
-        houseNumber: {
-          minValue: minValue(0),
-          maxValue: maxValue(999999999),
+      postcode: {},
+      country: { alphaRuEn },
+      region: { alphaRuEn },
+      city: { required, alphaRuEn },
+      street: { alphaRuEn },
+      houseNumber: {
+        minValue: minValue(0),
+        maxValue: maxValue(999999999),
+      },
+      documentType: { required },
+      documentInfo: {
+        seriesOfPassport: {
+          minLength: minLength(4),
+          maxValue: maxValue(9999),
+        },
+        numberOfPassport: {
+          minLength: minLength(6),
+          maxValue: maxValue(999999),
         },
       },
-      passport: {
-        documentType: { required },
-        documentInfo: {
-          seriesOfPassport: {
-            minLength: minLength(4),
-            maxValue: maxValue(9999),
-          },
-          numberOfPassport: {
-            minLength: minLength(6),
-            maxValue: maxValue(999999),
-          },
+      issuedBy: {},
+      dateOfIssue: {
+        dateOfIssueDay: {
+          required,
+          maxValue: maxValue(31),
+          minValue: minValue(0),
         },
-        issuedBy: {},
-        dateOfIssue: {
-          day: {
-            required,
-            maxValue: maxValue(31),
-            minValue: minValue(0),
-          },
-          month: {
-            required,
-            maxValue: maxValue(12),
-            minValue: minValue(1),
-          },
-          year: {
-            required,
-            maxValue: maxValue(2021),
-            minValue: minValue(1800),
-          },
+        dateOfIssueMonth: {
+          required,
+          maxValue: maxValue(12),
+          minValue: minValue(1),
+        },
+        dateOfIssueYear: {
+          required,
+          maxValue: maxValue(2021),
+          minValue: minValue(1800),
         },
       },
     },

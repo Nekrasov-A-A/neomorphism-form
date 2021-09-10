@@ -1,7 +1,7 @@
 <template>
   <button
     class="button-sumbit"
-    type="sumbit"
+    :type="buttonType"
     @click="fixFocus"
     ref="buttonSubmit"
   >
@@ -12,6 +12,12 @@
 <script>
 export default {
   name: "ButtonSubmit",
+  props: {
+    buttonType: {
+      type: String,
+      default: "sumbit",
+    },
+  },
   methods: {
     fixFocus: function() {
       this.$refs.buttonSubmit.blur();

@@ -5,6 +5,7 @@
     </label>
     <select
       @change="$emit('input', selected)"
+      ref="select"
       v-model="selected"
       @blur="field.$touch()"
       @focus="field.$reset()"
@@ -46,6 +47,11 @@ export default {
     },
     field: {
       type: Object,
+    },
+  },
+  methods: {
+    focus: function() {
+      this.$refs.select.focus();
     },
   },
 };

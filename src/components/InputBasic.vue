@@ -7,19 +7,20 @@
         'form-group__input--inner-bs': !isShowErrorMessages,
       }"
       @blur="field.$touch()"
-      @focus="field.$reset()"
       :placeholder="isRequired()"
       :type="inputType"
       :value="value"
       @change="$emit('input', $event.target.value)"
       @keypress="customValidateInput($event)"
+      ref="inputBasic"
     />
-
+    <!--  :ref="refValue" -->
     <label
       class="form-group__label"
       :class="{
         'form-group__label--success':
           value !== '' && !field.$invalid && field.$dirty,
+        'form-group__label--error': field.$error && field.$model !== '',
       }"
       >{{ placeholder }}
       <img src="@/assets/check-circle-solid.svg" alt="check icon" />
@@ -87,6 +88,9 @@ export default {
   }),
 
   methods: {
+    focus: function() {
+      this.$refs.inputBasic.focus();
+    },
     customValidateInput: function(event) {
       if (
         event.charCode === 9 ||
@@ -153,7 +157,10 @@ export default {
         > img
           display: flex
           margin-left: 4px
-
+    &--error
+      color: $color-red
+      display: flex
+      top: -10px
   &__input
       border: 1px solid transparent
       padding: 16px
