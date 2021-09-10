@@ -14,7 +14,6 @@
       @keypress="customValidateInput($event)"
       ref="inputBasic"
     />
-    <!--  :ref="refValue" -->
     <label
       class="form-group__label"
       :class="{

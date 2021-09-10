@@ -1,0 +1,48 @@
+.form__date
+      display: flex
+      flex-direction: column
+      margin-bottom: 20px
+      position: relative
+      box-shadow:  inset 2px 2px 5px $color-shadow, inset -5px -5px 10px transparentize($color-white,.3)
+      padding: 16px
+      border-radius: 10px
+      border: 2px solid transparent
+      &--error
+        border-color: $color-red
+      &--success
+        border-color: $color-success
+      &__flex-box
+        display: flex
+        width: 100%
+        > *
+          margin-left: 20px
+          max-width: 100px
+          @media screen and (max-width: $mobile)
+            margin-left: 10px
+          &:first-child
+            margin-left: 0
+      &__passport-date
+        > .form__date__flex-box
+          > *
+            max-width: 400px
+            &:first-child
+              width: 40%
+            &:last-child
+              width: 60%
+      &__headline
+        font-size: 14px
+        width: 100%
+        color: $color-dark-blue
+        text-align: left
+        margin-bottom: 24px
+        margin-left: 8px
+        cursor: default
+      &__message-error
+        color: $color-red
+        font-size: 12px
+        position: absolute
+        bottom: 16px
+        left: 0
+        display: flex
+        justify-content: center
+        width: 100%

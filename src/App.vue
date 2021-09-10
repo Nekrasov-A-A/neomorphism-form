@@ -3,252 +3,39 @@
     <div class="wrapper">
       <PopUp v-if="isShowPopUp" @closePopUp="closePopUp" :formData="formData" />
       <form class="form" @submit.prevent="onSubmit" novalidate>
-        <!--  -->
-        <InputBasic
-          v-model.trim="$v.form.lastName.$model"
-          placeholder="Фамилия"
-          :field="$v.form.lastName"
-          :customInputRules="acceptOnlyLetters"
-          ref="lastName"
+        <PersonData
+          :field="$v.form.personData"
+          v-if="currentStep === 0"
+          ref="personData"
         />
-
-        <InputBasic
-          v-model.trim="$v.form.firstName.$model"
-          placeholder="Имя"
-          :field="$v.form.firstName"
-          :customInputRules="acceptOnlyLetters"
-          ref="firstName"
+        <PersonAddress
+          :field="$v.form.address"
+          v-else-if="currentStep === 1"
+          ref="address"
         />
-
-        <InputBasic
-          v-model.trim="$v.form.patronymicName.$model"
-          placeholder="Отчество"
-          :field="$v.form.patronymicName"
-          :customInputRules="acceptOnlyLetters"
-          ref="patronymicName"
+        <PassportData
+          :field="$v.form.passport"
+          v-else-if="currentStep === 2"
+          ref="passport"
         />
-
-        <section
-          class="form__date"
-          :class="{
-            'form__date--error': $v.form.dayOfBirth.$anyError,
-            'form__date--success': !$v.form.dayOfBirth.$invalid,
-          }"
-          ref="dayOfBirth"
-          tabindex="0"
-        >
-          <div
-            v-if="$v.form.dayOfBirth.$anyError && !isShowErrorMessages"
-            class="form__date__message-error"
+        <AppointmentDoctor
+          v-else-if="currentStep === 3"
+          :field="$v.form.appointmentDoctor"
+          ref="appointmentDoctor"
+        />
+        <section class="form-control">
+          <button
+            @click="currentStep -= 1"
+            type="button"
+            :disabled="currentStep === 0"
           >
-            Поля обязательны к заполнению
-          </div>
-          <h3 class="form__date__headline">Дата рождения*</h3>
-          <div class="form__date__flex-box">
-            <InputBasic
-              v-model.trim="$v.form.dayOfBirth.dayOfBirthDay.$model"
-              placeholder="День"
-              :field="$v.form.dayOfBirth.dayOfBirthDay"
-              :customInputRules="acceptOnlyNumbers"
-              :isShowErrorMessages="isShowErrorMessages"
-              tip="дд"
-              ref="dayOfBirthDay"
-            />
-            <InputBasic
-              v-model.trim="$v.form.dayOfBirth.dayOfBirthMonth.$model"
-              placeholder="Месяц"
-              :field="$v.form.dayOfBirth.dayOfBirthMonth"
-              :customInputRules="acceptOnlyNumbers"
-              :isShowErrorMessages="isShowErrorMessages"
-              tip="мм"
-              ref="dayOfBirthMonth"
-            />
-            <InputBasic
-              v-model.trim="$v.form.dayOfBirth.dayOfBirthYear.$model"
-              placeholder="Год"
-              :field="$v.form.dayOfBirth.dayOfBirthYear"
-              :customInputRules="acceptOnlyNumbers"
-              :isShowErrorMessages="isShowErrorMessages"
-              tip="гггг"
-              ref="dayOfBirthYear"
-            />
-          </div>
+            Пред.
+          </button>
+          <ButtonSubmit v-if="currentStep === 3">Отправить</ButtonSubmit>
+          <button @click="checkInvalidFormGroup" type="button" v-else>
+            След.
+          </button>
         </section>
-
-        <InputBasic
-          v-model.trim="$v.form.mobilePhoneNumber.$model"
-          placeholder="Мобильный телефон"
-          :field="$v.form.mobilePhoneNumber"
-          :customInputRules="acceptOnlyNumbers"
-          tip="Начинается с 7"
-          ref="mobilePhoneNumber"
-        />
-
-        <InputsRadioGender
-          v-model="$v.form.gender.$model"
-          :field="$v.form.gender"
-        />
-        <InputCheckboxMulti
-          v-model="$v.form.multiple.$model"
-          :field="$v.form.multiple"
-          ref="multiple"
-        />
-        <InputSelect
-          :optionsData="doctorsData"
-          v-model="$v.form.doctor.$model"
-          :field="$v.form.doctor"
-          disabledPhrase="Выберите врача"
-        />
-        <InputCheckBox
-          v-model="$v.form.isNotify.$model"
-          :field="$v.form.isNotify"
-          item="СМС"
-          label="Получать СМС-уведомления"
-        />
-        <InputBasic
-          v-model.trim="$v.form.postcode.$model"
-          placeholder="Индекс"
-          :field="$v.form.postcode"
-          :customInputRules="() => true"
-          ref="postcode"
-        />
-        <InputBasic
-          v-model.trim="$v.form.country.$model"
-          placeholder="Страна"
-          :field="$v.form.country"
-          :customInputRules="acceptOnlyLetters"
-          ref="country"
-        />
-        <InputBasic
-          v-model.trim="$v.form.region.$model"
-          placeholder="Регион"
-          :field="$v.form.region"
-          :customInputRules="acceptOnlyLetters"
-          ref="region"
-        />
-        <InputBasic
-          v-model.trim="$v.form.city.$model"
-          placeholder="Город"
-          :field="$v.form.city"
-          :customInputRules="acceptOnlyLetters"
-          ref="city"
-        />
-        <InputBasic
-          v-model.trim="$v.form.street.$model"
-          placeholder="Улица"
-          :field="$v.form.street"
-          :customInputRules="acceptOnlyLetters"
-          ref="street"
-        />
-        <InputBasic
-          v-model.trim="$v.form.houseNumber.$model"
-          placeholder="Номер дома"
-          :field="$v.form.houseNumber"
-          :customInputRules="acceptOnlyNumbers"
-          ref="houseNumber"
-        />
-
-        <InputSelect
-          :optionsData="typeOfDocumentsData"
-          v-model="$v.form.documentType.$model"
-          :field="$v.form.documentType"
-          disabledPhrase="Выберите тип документа*"
-          ref="documentType"
-        />
-
-        <section
-          class="form__date  form__date__passport-date"
-          :class="{
-            'form__date--error': $v.form.documentInfo.$anyError,
-            'form__date--success':
-              !$v.form.documentInfo.$anyError &&
-              $v.form.documentInfo.$dirty &&
-              $v.form.documentInfo.seriesOfPassport.$model !== '' &&
-              $v.form.documentInfo.numberOfPassport.$model !== '',
-          }"
-          ref="documentInfo"
-          tabindex="0"
-        >
-          <div
-            v-if="$v.form.documentInfo.$anyError && !isShowErrorMessages"
-            class="form__date__message-error"
-          >
-            Значение неприемлимо
-          </div>
-          <h3 class="form__date__headline">Данные документа:</h3>
-          <div class="form__date__flex-box">
-            <InputBasic
-              v-model.trim="$v.form.documentInfo.seriesOfPassport.$model"
-              placeholder="Серия"
-              :field="$v.form.documentInfo.seriesOfPassport"
-              :customInputRules="acceptOnlyNumbers"
-              :isShowErrorMessages="isShowErrorMessages"
-              ref="seriesOfPassport"
-            />
-            <InputBasic
-              v-model.trim="$v.form.documentInfo.numberOfPassport.$model"
-              placeholder="Номер"
-              :field="$v.form.documentInfo.numberOfPassport"
-              :customInputRules="acceptOnlyNumbers"
-              :isShowErrorMessages="isShowErrorMessages"
-              ref="numberOfPassport"
-            />
-          </div>
-        </section>
-
-        <TextareaBasic
-          v-model="$v.form.issuedBy.$model"
-          :field="$v.form.issuedBy"
-        />
-
-        <section
-          class="form__date "
-          :class="{
-            'form__date--error': $v.form.dateOfIssue.$anyError,
-            'form__date--success': !$v.form.dateOfIssue.$invalid,
-          }"
-          tabindex="0"
-          ref="dateOfIssue"
-        >
-          <div
-            v-if="$v.form.dateOfIssue.$anyError && !isShowErrorMessages"
-            class="form__date__message-error"
-          >
-            Поля обязательны к заполнению
-          </div>
-          <h3 class="form__date__headline">Дата выдачи*</h3>
-          <div class="form__date__flex-box">
-            <InputBasic
-              v-model.trim="$v.form.dateOfIssue.dateOfIssueDay.$model"
-              placeholder="День"
-              :field="$v.form.dateOfIssue.dateOfIssueDay"
-              :customInputRules="acceptOnlyNumbers"
-              :isShowErrorMessages="isShowErrorMessages"
-              tip="дд"
-              ref="dateOfIssueDay"
-            />
-            <InputBasic
-              v-model.trim="$v.form.dateOfIssue.dateOfIssueMonth.$model"
-              placeholder="Месяц"
-              :field="$v.form.dateOfIssue.dateOfIssueMonth"
-              :customInputRules="acceptOnlyNumbers"
-              :isShowErrorMessages="isShowErrorMessages"
-              tip="мм"
-              ref="dateOfIssueMonth"
-            />
-            <InputBasic
-              v-model.trim="$v.form.dateOfIssue.dateOfIssueYear.$model"
-              placeholder="Год"
-              :field="$v.form.dateOfIssue.dateOfIssueYear"
-              :customInputRules="acceptOnlyNumbers"
-              :isShowErrorMessages="isShowErrorMessages"
-              tip="гггг"
-              ref="dateOfIssueYear"
-            />
-          </div>
-        </section>
-
-        <ButtonSubmit>Отправить</ButtonSubmit>
       </form>
     </div>
   </div>
@@ -261,83 +48,93 @@ import {
   maxValue,
   minValue,
 } from "vuelidate/lib/validators";
-import InputBasic from "./components/InputBasic.vue";
-import InputCheckBox from "./components/InputCheckbox.vue";
-import InputSelect from "./components/InputSelect.vue";
-import ButtonSubmit from "./components/ButtonSubmit.vue";
-import InputsRadioGender from "./components/InputsRadioGender.vue";
-import InputCheckboxMulti from "./components/InputCheckboxMulti.vue";
-import TextareaBasic from "./components/TextareaBasic.vue";
-import PopUp from "./components/PopUp.vue";
 import {
   alphaRuEn,
   firstValueMobilePhoneNumber,
   MobilePhoneNumberLength,
 } from "./utils/validateRules";
+import PersonData from "./components/formSections/PersonData.vue";
+import PersonAddress from "./components/formSections/PersonAddress.vue";
+import PassportData from "./components/formSections/PassportData.vue";
+import AppointmentDoctor from "./components/formSections/AppointmentDoctor.vue";
+import ButtonSubmit from "./components/ButtonSubmit.vue";
+import PopUp from "./components/PopUp.vue";
 export default {
   name: "App",
   components: {
-    InputBasic,
-    InputCheckBox,
-    InputSelect,
     ButtonSubmit,
     PopUp,
-    InputsRadioGender,
-    TextareaBasic,
-    InputCheckboxMulti,
+    PersonData,
+    PersonAddress,
+    PassportData,
+    AppointmentDoctor,
   },
   data: () => ({
-    doctorsData: ["Иванов", "Захаров", "Чернышева"],
-    typeOfDocumentsData: [
-      "Паспорт",
-      "Свидетельство о рождении",
-      "Вод. удостоверение",
-    ],
+    formSectionsData: [
+      "personData",
+      "address",
+      "passport",
+      "appointmentDoctor",
+    ], // Изменить когда будут готовы все секции
+    // на $v.form.$params or something else IN METHODS > checkInvalidGroupField
+    currentStep: 0,
+    maxStep: 0,
+
     isShowErrorMessages: false,
-    isShowPopUp: true,
+    isShowPopUp: false,
     formData: "",
     form: {
-      lastName: "",
-      firstName: "",
-      patronymicName: "",
-      multiple: [],
-      dayOfBirth: {
-        dayOfBirthDay: "",
-        dayOfBirthMonth: "",
-        dayOfBirthYear: "",
+      personData: {
+        lastName: "",
+        firstName: "",
+        patronymicName: "",
+        dateOfBirth: {
+          day: "",
+          month: "",
+          year: "",
+        },
+        mobilePhoneNumber: "",
+        gender: "",
       },
-      mobilePhoneNumber: "",
-      gender: "",
-      isNotify: false,
-      doctor: "Не выбрано",
-
-      postcode: "",
-      country: "",
-      region: "",
-      city: "",
-      street: "",
-      houseNumber: "",
-      documentType: "",
-      documentInfo: {
-        seriesOfPassport: "",
-        numberOfPassport: "",
+      address: {
+        postcode: "",
+        country: "",
+        region: "",
+        city: "",
+        street: "",
+        houseNumber: "",
       },
-      issuedBy: "",
-      dateOfIssue: {
-        dateOfIssueDay: "",
-        dateOfIssueMonth: "",
-        dateOfIssueYear: "",
+      passport: {
+        documentType: "",
+        documentInfo: {
+          seriesOfPassport: "",
+          numberOfPassport: "",
+        },
+        issuedBy: "",
+        dateOfIssue: {
+          day: "",
+          month: "",
+          year: "",
+        },
+      },
+      appointmentDoctor: {
+        doctor: "Не выбрано",
+        multiple: [],
+        isNotify: false,
       },
     },
   }),
   methods: {
-    acceptOnlyLetters: function(key) {
-      return /[а-яa-z]/gi.test(key);
+    checkInvalidFormGroup() {
+      this.$v.form[this.formSectionsData[this.currentStep]].$touch();
+      if (this.$v.form[this.formSectionsData[this.currentStep]].$invalid) {
+        this.$refs[this.formSectionsData[this.currentStep]].focus();
+      } else {
+        this.currentStep += 1;
+        if (this.currentStep >= this.formSectionsData.length)
+          this.currentStep = this.formSectionsData.length - 1;
+      }
     },
-    acceptOnlyNumbers: function(key) {
-      return /[0-9]/gi.test(key);
-    },
-
     closePopUp: function() {
       this.isShowPopUp = false;
     },
@@ -357,119 +154,133 @@ export default {
       } else {
         this.isShowPopUp = true;
 
-        // multiple: [],
-
         this.formData = {
-          lastName: this.toUpperCaseFirstLetter(this.$v.form.$model.lastName),
-          firstName: this.toUpperCaseFirstLetter(this.$v.form.$model.firstName),
-          patronymicName: this.toUpperCaseFirstLetter(
-            this.$v.form.$model.patronymicName
+          lastName: this.toUpperCaseFirstLetter(
+            this.$v.form.personData.$model.lastName
           ),
-          targetGroup: this.$v.form.multiple.$model,
-          mobilePhoneNumber: this.$v.form.$model.mobilePhoneNumber
+          firstName: this.toUpperCaseFirstLetter(
+            this.$v.form.personData.$model.firstName
+          ),
+          patronymicName: this.toUpperCaseFirstLetter(
+            this.$v.form.personData.$model.patronymicName
+          ),
+          targetGroup: this.$v.form.appointmentDoctor.multiple.$model,
+          mobilePhoneNumber: this.$v.form.personData.$model.mobilePhoneNumber
             .match(/[0-9]/g)
             .join(""),
           dayOfBirth:
-            this.$v.form.$model.dayOfBirth.dayOfBirthDay +
+            this.$v.form.personData.$model.dateOfBirth.day +
             "." +
-            this.$v.form.$model.dayOfBirth.dayOfBirthMonth +
+            this.$v.form.$model.personData.dateOfBirth.month +
             "." +
-            this.$v.form.$model.dayOfBirth.dayOfBirthYear,
-          gender: this.$v.form.$model.gender,
-          isNotify: this.$v.form.$model.isNotify,
-          doctor: this.$v.form.$model.doctor,
-          postcode: this.$v.form.$model.postcode,
-          country: this.$v.form.$model.country,
-          region: this.$v.form.$model.region,
-          city: this.$v.form.$model.city,
-          street: this.$v.form.$model.street,
-          houseNumber: this.$v.form.$model.houseNumber,
-          documentType: this.$v.form.$model.documentType,
+            this.$v.form.$model.personData.dateOfBirth.year,
+          gender: this.$v.form.personData.$model.gender,
+          isNotify: this.$v.form.appointmentDoctor.$model.isNotify,
+          doctor: this.$v.form.appointmentDoctor.$model.doctor,
+          postcode: this.$v.form.address.$model.postcode,
+          country: this.$v.form.address.$model.country,
+          region: this.$v.form.address.$model.region,
+          city: this.$v.form.address.$model.city,
+          street: this.$v.form.address.$model.street,
+          houseNumber: this.$v.form.address.$model.houseNumber,
+          documentType: this.$v.form.passport.$model.documentType,
           documentInfo:
-            this.$v.form.$model.documentInfo.seriesOfPassport +
+            this.$v.form.passport.$model.documentInfo.seriesOfPassport +
             "/" +
-            this.$v.form.$model.documentInfo.numberOfPassport,
-          issuedBy: this.$v.form.$model.issuedBy,
+            this.$v.form.passport.$model.documentInfo.numberOfPassport,
+          issuedBy: this.$v.form.passport.$model.issuedBy,
           dateOfIssue:
-            this.$v.form.$model.dateOfIssue.dateOfIssueDay +
+            this.$v.form.passport.$model.dateOfIssue.day +
             "." +
-            this.$v.form.$model.dateOfIssue.dateOfIssueMonth +
+            this.$v.form.passport.$model.dateOfIssue.month +
             "." +
-            this.$v.form.$model.dateOfIssue.dateOfIssueYear,
+            this.$v.form.passport.$model.dateOfIssue.year,
         };
       }
       return;
     },
   },
-
+  watch: {
+    currentStep: function(val, oldVal) {
+      if (val > oldVal) this.maxStep = this.currentStep;
+    },
+  },
   validations: {
     form: {
-      lastName: { required, alphaRuEn },
-      firstName: { required, alphaRuEn },
-      patronymicName: { alphaRuEn },
-      multiple: { required },
-      mobilePhoneNumber: {
-        required,
-        MobilePhoneNumberLength,
-        firstValueMobilePhoneNumber,
-      },
-      dayOfBirth: {
-        dayOfBirthDay: {
+      personData: {
+        lastName: { required, alphaRuEn },
+        firstName: { required, alphaRuEn },
+        patronymicName: { alphaRuEn },
+        dateOfBirth: {
+          day: {
+            required,
+            maxValue: maxValue(31),
+            minValue: minValue(0),
+          },
+          month: {
+            required,
+            maxValue: maxValue(12),
+            minValue: minValue(1),
+          },
+          year: {
+            required,
+            maxValue: maxValue(2021),
+            minValue: minValue(1800),
+          },
+        },
+        mobilePhoneNumber: {
           required,
-          maxValue: maxValue(31),
+          MobilePhoneNumberLength,
+          firstValueMobilePhoneNumber,
+        },
+        gender: {},
+      },
+      address: {
+        postcode: {},
+        country: { alphaRuEn },
+        region: { alphaRuEn },
+        city: { required, alphaRuEn },
+        street: { alphaRuEn },
+        houseNumber: {
           minValue: minValue(0),
-        },
-        dayOfBirthMonth: {
-          required,
-          maxValue: maxValue(12),
-          minValue: minValue(1),
-        },
-        dayOfBirthYear: {
-          required,
-          maxValue: maxValue(2021),
-          minValue: minValue(1800),
+          maxValue: maxValue(999999999),
         },
       },
-      gender: {},
-      isNotify: {},
-      doctor: {},
-      postcode: {},
-      country: { alphaRuEn },
-      region: { alphaRuEn },
-      city: { required, alphaRuEn },
-      street: { alphaRuEn },
-      houseNumber: {
-        minValue: minValue(0),
-        maxValue: maxValue(999999999),
+      passport: {
+        documentType: { required },
+        documentInfo: {
+          seriesOfPassport: {
+            minLength: minLength(4),
+            maxValue: maxValue(9999),
+          },
+          numberOfPassport: {
+            minLength: minLength(6),
+            maxValue: maxValue(999999),
+          },
+        },
+        issuedBy: {},
+        dateOfIssue: {
+          day: {
+            required,
+            maxValue: maxValue(31),
+            minValue: minValue(0),
+          },
+          month: {
+            required,
+            maxValue: maxValue(12),
+            minValue: minValue(1),
+          },
+          year: {
+            required,
+            maxValue: maxValue(2021),
+            minValue: minValue(1800),
+          },
+        },
       },
-      documentType: { required },
-      documentInfo: {
-        seriesOfPassport: {
-          minLength: minLength(4),
-          maxValue: maxValue(9999),
-        },
-        numberOfPassport: {
-          minLength: minLength(6),
-          maxValue: maxValue(999999),
-        },
-      },
-      issuedBy: {},
-      dateOfIssue: {
-        dateOfIssueDay: {
-          required,
-          maxValue: maxValue(31),
-          minValue: minValue(0),
-        },
-        dateOfIssueMonth: {
-          required,
-          maxValue: maxValue(12),
-          minValue: minValue(1),
-        },
-        dateOfIssueYear: {
-          required,
-          maxValue: maxValue(2021),
-          minValue: minValue(1800),
-        },
+      appointmentDoctor: {
+        doctor: {},
+        multiple: { required },
+        isNotify: {},
       },
     },
   },
@@ -485,12 +296,41 @@ export default {
   align-items: center
   justify-content: center
   background-color: $color-bg
-  > form
+  .form
     width: 100%
     display: flex
     align-items: center
     justify-content: center
     flex-direction: column
+    &-control
+      display: flex
+      > button
+        font-size: 16px
+        font-weight: 700
+        padding: 1em 3em
+        border: 2px dashed transparent
+        outline: 0
+        color: $color-dark-blue
+        background-color: $color-bg
+        box-shadow: -5px -5px 20px $color-white,  5px 5px 20px $color-shadow
+        transition: all 0.2s ease-in-out
+        cursor: pointer
+        border-radius: 50px
+        &:hover
+          box-shadow: -2px -2px 5px $color-white, 2px 2px 5px $color-shadow
+        &:active
+          box-shadow: inset 1px 1px 2px $color-shadow, inset -1px -1px 2px $color-white
+        &:disabled
+          box-shadow: inset 1px 1px 2px $color-shadow, inset -1px -1px 2px $color-white
+          opacity: .5
+          cursor: default
+        &:focus
+          animation: showBorder 0s .1s linear forwards
+          @keyframes showBorder
+            0%
+              border-color: transparent
+            100%
+              border-color: $color-dark-blue
     .form__date
       display: flex
       flex-direction: column
