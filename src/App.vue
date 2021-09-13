@@ -215,7 +215,7 @@ export default {
           day: {
             required,
             maxValue: maxValue(31),
-            minValue: minValue(0),
+            minValue: minValue(1),
           },
           month: {
             required,
@@ -263,7 +263,7 @@ export default {
           day: {
             required,
             maxValue: maxValue(31),
-            minValue: minValue(0),
+            minValue: minValue(1),
           },
           month: {
             required,
@@ -302,6 +302,8 @@ export default {
     align-items: center
     justify-content: center
     flex-direction: column
+    &__section
+      color: red
     &-control
       display: flex
       > button
