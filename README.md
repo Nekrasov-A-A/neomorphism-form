@@ -1,5 +1,5 @@
 # neomorphism form
 ```
-Vue 2 + Vuelidte
+Vue 2 + Vuelidate
 ```
 
