@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <section class="form__section">
+    <h1>Адрес</h1>
     <InputBasic
       v-model.trim="field.postcode.$model"
       placeholder="Индекс"
@@ -42,16 +43,12 @@
       :customInputRules="acceptOnlyNumbers"
       ref="houseNumber"
     />
-  </div>
+  </section>
 </template>
 
 <script>
-import "./formSections.sass";
-import {
-  acceptOnlyLetters,
-  acceptOnlyNumbers,
-} from "../../utils/customInputRules";
-import InputBasic from "../InputBasic.vue";
+import { acceptOnlyLetters, acceptOnlyNumbers } from "@/utils/customInputRules";
+import InputBasic from "./formItems/InputBasic.vue";
 export default {
   name: "PersonAddress",
   components: { InputBasic },

@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <section class="form__section">
+    <h1>Запись к специалисту</h1>
     <InputCheckboxMulti
       v-model="field.multiple.$model"
       :field="field.multiple"
@@ -18,17 +19,13 @@
       item="СМС"
       label="Получать СМС-уведомления"
     />
-  </div>
+  </section>
 </template>
 <script>
-import "./formSections.sass";
-import {
-  acceptOnlyLetters,
-  acceptOnlyNumbers,
-} from "../../utils/customInputRules";
-import InputSelect from "../InputSelect.vue";
-import InputCheckboxMulti from "../InputCheckboxMulti.vue";
-import InputCheckbox from "../InputCheckbox.vue";
+import { acceptOnlyLetters, acceptOnlyNumbers } from "@/utils/customInputRules";
+import InputSelect from "./formItems/InputSelect.vue";
+import InputCheckboxMulti from "./formGroups/InputCheckboxMulti.vue";
+import InputCheckbox from "./formItems/InputCheckbox.vue";
 export default {
   name: "PersonData",
   components: { InputSelect, InputCheckboxMulti, InputCheckbox },

@@ -5,6 +5,8 @@
       :class="{
         'input-basic--error': field.$error,
         'input-basic--inner-bs': !isShowErrorMessages,
+        'input-basic--success':
+          !field.$error && field.$dirty && field.$model !== '',
       }"
       @blur="field.$touch()"
       :placeholder="isRequired()"
@@ -28,8 +30,6 @@
     <div
       class="form__item__message form__item__message--error"
       v-if="field.required === false && field.$dirty && isShowErrorMessages"
-      role="status"
-      aria-live="polite"
     >
       * Поле обязательно к заполнению
     </div>
@@ -38,8 +38,6 @@
       v-else-if="
         field.minValue === false && field.$dirty && isShowErrorMessages
       "
-      role="status"
-      aria-live="polite"
     >
       Введите значение больше чем {{ field.$params.minValue.min }}
     </div>
@@ -48,16 +46,12 @@
       v-else-if="
         field.maxValue === false && field.$dirty && isShowErrorMessages
       "
-      role="status"
-      aria-live="polite"
     >
       Введите значение меньше чем {{ field.$params.maxValue.max }}
     </div>
     <div
       class="form__item__message form__item__message--error"
       v-else-if="field.minLength === false && isShowErrorMessages"
-      role="status"
-      aria-live="polite"
     >
       Введите еще
       {{ field.$params.minLength.min - field.$model.length }} символов
@@ -65,8 +59,6 @@
     <div
       class="form__item__message form__item__message--error"
       v-else-if="field.alphaRuEn === false && isShowErrorMessages"
-      role="status"
-      aria-live="polite"
     >
       Используйте только буквы
     </div>
@@ -75,34 +67,23 @@
       v-else-if="
         field.firstValueMobilePhoneNumber === false && isShowErrorMessages
       "
-      role="status"
-      aria-live="polite"
     >
       Номер должен начинаться с 7
     </div>
     <div
       class="form__item__message form__item__message--error"
       v-else-if="field.MobilePhoneNumberLength === false && isShowErrorMessages"
-      role="status"
-      aria-live="polite"
     >
       Введите 11 цифр
     </div>
     <!-- Error-message end- -->
-    <div
-      class="form__item__message form__item__message--tip"
-      v-else
-      role="status"
-      aria-live="polite"
-    >
+    <div class="form__item__message form__item__message--tip" v-else>
       {{ tip }}
     </div>
   </div>
 </template>
 
 <script>
-import errorMessages from "../utils/errorMessages";
-
 export default {
   name: "InputBasic",
   props: {
@@ -131,9 +112,6 @@ export default {
       default: "",
     },
   },
-  data: () => ({
-    errorMessages,
-  }),
 
   methods: {
     focus: function() {
@@ -167,24 +145,8 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.form__item
-  position: relative
-  padding-bottom: 1.25em
-  margin-bottom: 1.75em
-  &__message
-    position: absolute
-    bottom: 0.25em
-    left: 1em
-    font-size: 0.75em
-    &--error
-      color: $color-red
-    &--tip
-      color: $color-grayish-blue
-
-
-
 .input-basic
-  border: 1px solid transparent
+  border: 2px solid transparent
   padding: 1em
   border-radius: 50px
   outline: 0
@@ -215,7 +177,7 @@ export default {
         top: -0.714em
         opacity: 1
   &::placeholder
-    color: $color-grayish-blue
+    color: transparentize($color-dark-blue,.3)
     font-size: 0.875em
   &--inner-bs
     box-shadow:  inset 1px 1px 2px $color-shadow, inset -1px -1px 2px $color-white
@@ -223,12 +185,17 @@ export default {
     border-color: $color-red
     &::placeholder
       color: $color-red
+  &--success
+    border-color: $color-success
+  &:-webkit-autofill
+    transition: background-color 5000s ease-in-out 3s
+
   &__label
     position: absolute
     top: 50%
     left: 1.143em
     transform: translateY(-50%)
-    color: $color-grayish-blue
+    color: transparentize($color-dark-blue,.3)
     cursor: text
     display: none
     font-size: 0.875em

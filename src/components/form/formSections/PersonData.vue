@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <section class="form__section">
+    <h1>Персональные данные</h1>
     <InputBasic
       v-model.trim="field.lastName.$model"
       placeholder="Фамилия"
@@ -7,7 +8,6 @@
       :customInputRules="acceptOnlyLetters"
       ref="lastName"
     />
-
     <InputBasic
       v-model.trim="field.firstName.$model"
       placeholder="Имя"
@@ -15,7 +15,6 @@
       :customInputRules="acceptOnlyLetters"
       ref="firstName"
     />
-
     <InputBasic
       v-model.trim="field.patronymicName.$model"
       placeholder="Отчество"
@@ -24,52 +23,6 @@
       ref="patronymicName"
     />
     <DateOfBirth :field="field.dateOfBirth" ref="dateOfBirth" />
-    <!-- <section
-      class="form__date"
-      :class="{
-        'form__date--error': field.dayOfBirth.$anyError,
-        'form__date--success': !field.dayOfBirth.$invalid,
-      }"
-      ref="dayOfBirth"
-      tabindex="0"
-    >
-      <div
-        v-if="field.dayOfBirth.$anyError && !isShowErrorMessages"
-        class="form__date__message-error"
-      >
-        Поля обязательны к заполнению
-      </div>
-      <h3 class="form__date__headline">Дата рождения*</h3>
-      <div class="form__date__flex-box">
-        <InputBasic
-          v-model.trim="field.dayOfBirth.dayOfBirthDay.$model"
-          placeholder="День"
-          :field="field.dayOfBirth.dayOfBirthDay"
-          :customInputRules="acceptOnlyNumbers"
-          :isShowErrorMessages="isShowErrorMessages"
-          tip="дд"
-          ref="dayOfBirthDay"
-        />
-        <InputBasic
-          v-model.trim="field.dayOfBirth.dayOfBirthMonth.$model"
-          placeholder="Месяц"
-          :field="field.dayOfBirth.dayOfBirthMonth"
-          :customInputRules="acceptOnlyNumbers"
-          :isShowErrorMessages="isShowErrorMessages"
-          tip="мм"
-          ref="dayOfBirthMonth"
-        />
-        <InputBasic
-          v-model.trim="field.dayOfBirth.dayOfBirthYear.$model"
-          placeholder="Год"
-          :field="field.dayOfBirth.dayOfBirthYear"
-          :customInputRules="acceptOnlyNumbers"
-          :isShowErrorMessages="isShowErrorMessages"
-          tip="гггг"
-          ref="dayOfBirthYear"
-        />
-      </div>
-    </section> -->
     <InputBasic
       v-model.trim="field.mobilePhoneNumber.$model"
       placeholder="Мобильный телефон"
@@ -79,22 +32,14 @@
       ref="mobilePhoneNumber"
     />
     <InputsRadioGender v-model="field.gender.$model" :field="field.gender" />
-
-    <!-- <button style="padding: 16px" @click="normFn" type="button">
-      Prev
-    </button> -->
-  </div>
+  </section>
 </template>
 
 <script>
-import "./formSections.sass";
-import {
-  acceptOnlyLetters,
-  acceptOnlyNumbers,
-} from "../../utils/customInputRules";
-import InputBasic from "../InputBasic.vue";
-import InputsRadioGender from "../InputsRadioGender.vue";
-import DateOfBirth from "../multipleInputs/DateOfBirth.vue";
+import { acceptOnlyLetters, acceptOnlyNumbers } from "@/utils/customInputRules";
+import InputBasic from "./formItems/InputBasic.vue";
+import InputsRadioGender from "./formGroups/InputsRadioGender.vue";
+import DateOfBirth from "./formGroups/DateOfBirth.vue";
 export default {
   components: { InputBasic, InputsRadioGender, DateOfBirth },
   name: "PersonData",

@@ -2,7 +2,7 @@
   <div class="container" @click.self="closePopUp">
     <div class="container__card">
       <img
-        src="../assets/times-circle-regular.svg"
+        src="@/assets/times-circle-regular.svg"
         alt="times icon"
         @click="closePopUp"
       />

@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <section class="form__section">
+    <h1>Документ</h1>
     <InputSelect
       :optionsData="typeOfDocumentsData"
       v-model="field.documentType.$model"
@@ -18,19 +19,15 @@
       v-model="field.dateOfIssue.$model"
       :field="field.dateOfIssue"
     />
-  </div>
+  </section>
 </template>
 
 <script>
-import "./formSections.sass";
-import {
-  acceptOnlyLetters,
-  acceptOnlyNumbers,
-} from "../../utils/customInputRules";
-import InputSelect from "../InputSelect.vue";
-import DocumentInfo from "../multipleInputs/DocumentInfo.vue";
-import TextareaBasic from "../TextareaBasic.vue";
-import DateOfIssue from "../multipleInputs/DateOfIssue.vue";
+import { acceptOnlyLetters, acceptOnlyNumbers } from "@/utils/customInputRules";
+import InputSelect from "./formItems/InputSelect.vue";
+import DocumentInfo from "./formGroups/DocumentInfo.vue";
+import TextareaBasic from "./formItems/TextareaBasic.vue";
+import DateOfIssue from "./formGroups/DateOfIssue.vue";
 export default {
   name: "PersonData",
   components: { InputSelect, TextareaBasic, DocumentInfo, DateOfIssue },

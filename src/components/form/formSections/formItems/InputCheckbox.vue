@@ -1,8 +1,8 @@
 <template>
-  <div class="input-checkbox">
-    <h1>{{ label }}</h1>
+  <div class="form__item form__item--checkbox">
+    <h3>{{ label }}</h3>
     <input
-      class="input-checkbox__input"
+      class="input-checkbox"
       type="checkbox"
       :id="item"
       :value="item"
@@ -73,22 +73,23 @@ export default {
 
 <style lang="sass" scoped>
 .input-checkbox
-  display: flex
-  align-items: center
-  justify-content: center
-  cursor: default
-  font-size: 14px
-  color: $color-dark-blue
+  display: none
+  &:checked + label
+    background: transparent
+    > img
+      opacity: 1
+      width: 1.7em
+      height: 1.7em
   &__label
     box-shadow: -5px -5px 20px $color-white,  5px 5px 20px $color-shadow
-    width: 32px
-    height: 32px
+    width: 2.348em
+    height: 2.348em
     display: flex
     align-items: center
     justify-content: center
     cursor: pointer
     border-radius: 8px
-    margin-left: 10px
+    margin-left: .7em
     transition: all .3s
     background: transparentize($color-white,.2)
     border: 1px solid transparentize($color-white,.3)
@@ -107,12 +108,4 @@ export default {
     > img
       opacity: 0
       transition: all .2s
-  &__input
-    display: none
-  &__input:checked + label
-    background: transparent
-    > img
-      opacity: 1
-      width: 24px
-      height: 24px
 </style>
